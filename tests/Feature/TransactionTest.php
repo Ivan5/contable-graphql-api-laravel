@@ -256,4 +256,118 @@ class TransactionTest extends TestCase
             ]
         ]);
     }
+
+    function test_it_cant_update_a_transaction_when_not_owner(){
+       $user = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id,
+            'balance' => 100
+        ]);
+        $transaction = factory(Transaction::class)->state('expense')->create([
+            'account_id' => $account->id,
+            'amount' => 50
+        ]);
+        $this->assertEquals(50,$account->fresh()->balance);
+        Passport::actingAs($user2);
+        $response = $this->graphQL('
+            mutation{
+                updateTransaction(id:'.$transaction->id.', input:{
+                    amount:20
+                }){
+                    description
+                    type
+                    amount
+                    account{
+                        id
+                        name
+                        balance
+                    }
+                }
+            }
+        ');
+
+        $response->assertJson([
+            'errors' => [
+                [
+                    "message"=>"You are not authorized to access updateTransaction"
+                ]
+            ]
+        ]);
+        
+    }
+
+    function test_it_can_delete_a_transaction(){
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id,
+            'balance' => 100
+        ]);
+        $transaction = factory(Transaction::class)->state('expense')->create([
+            'account_id' => $account->id,
+            'amount' => 50
+        ]);
+        $this->assertEquals(50, $account->fresh()->balance);
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            mutation{
+                deleteTransaction(id:'.$transaction->id.'){
+                    description
+                    type
+                    amount
+                    account{
+                        id
+                        name
+                        balance
+                    }
+                }
+            }
+        ');
+        $response->assertJson([
+            'data' =>[
+                'deleteTransaction' =>[
+                    'account' => [
+                        'balance' => 100.00
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    function test_it_can_delete_a_transaction_case_2(){
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id,
+            'balance' => 100
+        ]);
+        $transaction = factory(Transaction::class)->state('income')->create([
+            'account_id' => $account->id,
+            'amount' => 50
+        ]);
+        $this->assertEquals(150, $account->fresh()->balance);
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            mutation{
+                deleteTransaction(id:'.$transaction->id.'){
+                    description
+                    type
+                    amount
+                    account{
+                        id
+                        name
+                        balance
+                    }
+                }
+            }
+        ');
+        $response->assertJson([
+            'data' =>[
+                'deleteTransaction' =>[
+                    'account' => [
+                        'balance' => 100.00
+                    ]
+                ]
+            ]
+        ]);
+    }
 }

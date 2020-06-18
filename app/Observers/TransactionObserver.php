@@ -16,8 +16,7 @@ class TransactionObserver
     public function updating(Transaction $transaction){
         request()->merge([
             'old_transaction' => Transaction::find($transaction->id)->toArray()
-        ]);
-        
+        ]); 
     }
 
     public function updated(Transaction $transaction){
@@ -25,6 +24,16 @@ class TransactionObserver
        $this->setAccountBalanceFromOldTransaction($account);
        return $this->calculateNewAccountBalance($transaction, $account);
        
+    }
+
+    public function deleted(Transaction $transaction){
+        $account = $transaction->account;
+        if($transaction->type === "INCOME"){
+           $account->balance = $account->balance - $transaction->amount;
+           return $account->save();
+       }
+        $account->balance = $account->balance + $transaction->amount;
+       return $account->save();
     }
 
     public function setAccountBalanceFromOldTransaction($account) : Account  {
