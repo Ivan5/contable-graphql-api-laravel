@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Account;
+use App\Transaction;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -173,6 +174,46 @@ class TransactionTest extends TestCase
             'user_id' => $user->id,
             'name' => 'Savings',
             'id' => $account->id
+        ]);
+    }
+
+    function test_it_can_update_a_transaction(){
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id,
+            'balance' => 100
+        ]);
+        $transaction = factory(Transaction::class)->state('income')->create([
+            'account_id' => $account->id,
+            'amount' => 50
+        ]);
+        $this->assertEquals(150, $account->fresh()->balance);
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            mutation{
+                updateTransaction(id:'.$transaction->id.',input:{
+                    amount:20
+                }){
+                    description
+                    type
+                    amount
+                    account{
+                        id
+                        name
+                        balance
+                    }
+                }
+            }
+        ');
+        $response->assertJson([
+            'data' =>[
+                'updateTransaction' =>[
+                    'amount' => 20.00,
+                    'account' => [
+                        'balance' => 120.00
+                    ]
+                ]
+            ]
         ]);
     }
 }
