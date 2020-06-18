@@ -216,4 +216,44 @@ class TransactionTest extends TestCase
             ]
         ]);
     }
+
+    function test_it_can_update_a_transaction_case_2(){
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id,
+            'balance' => 100
+        ]);
+        $transaction = factory(Transaction::class)->state('expense')->create([
+            'account_id' => $account->id,
+            'amount' => 50
+        ]);
+        $this->assertEquals(50, $account->fresh()->balance);
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            mutation{
+                updateTransaction(id:'.$transaction->id.',input:{
+                    amount:20
+                }){
+                    description
+                    type
+                    amount
+                    account{
+                        id
+                        name
+                        balance
+                    }
+                }
+            }
+        ');
+        $response->assertJson([
+            'data' =>[
+                'updateTransaction' =>[
+                    'amount' => 20.00,
+                    'account' => [
+                        'balance' => 80.00
+                    ]
+                ]
+            ]
+        ]);
+    }
 }
