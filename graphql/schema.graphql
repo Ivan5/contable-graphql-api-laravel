@@ -1,4 +1,6 @@
 #import transaction.graphql
+#import account.graphql
+#import user.graphql
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
@@ -11,42 +13,16 @@ scalar DateTime
 scalar DateTimeTz
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeTz")
 
-type Mutation
-
 type Query {
     users: [User!]! @paginate(defaultCount: 10)
     user(id: ID @eq): User @find
     me: User! @auth
+    transactions: [Transaction!]
+        @paginate(scopes: ["byLoggedInUser"])
+        @guard(with: ["api"])
 }
 
-type User {
-    id: ID!
-    name: String!
-    email: String!
-    created_at: DateTime!
-    updated_at: DateTime!
-    accounts: [Account] @hasMany
-}
-
-type Account {
-    id: ID!
-    name: String!
-    balance: Float! @rules(apply: ["gte:0"])
-    created_at: DateTime!
-    updated_at: DateTime!
-    user: User! @belongsTo
-}
-
-input CreateAccountInput {
-    name: String!
-    balance: Float! @rules(apply: ["gte:0"])
-}
-
-input UpdateAccountInput {
-    name: String!
-}
-
-extend type Mutation {
+type Mutation {
     createAccount(input: CreateAccountInput! @spread): Account
         @create
         @inject(context: "user.id", name: "user_id")

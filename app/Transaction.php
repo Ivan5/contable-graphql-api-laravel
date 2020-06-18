@@ -17,4 +17,13 @@ class Transaction extends Model
     public function account(){
         return $this->belongsTo(Account::class);
     }
+
+    public function scopeByLoggedInUser($query){
+        if(!request()->user()){
+            return $query;
+        }
+        return $query->whereHas('account',function($query){
+            $query->where('user_id',request()->user()->id);
+        });
+    }
 }
