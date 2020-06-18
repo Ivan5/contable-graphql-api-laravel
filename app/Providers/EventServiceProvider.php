@@ -30,7 +30,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        Transaction::observe(new TransactionObserver()); 
+        Transaction::observe(TransactionObserver::class); 
         //
     }
 }
