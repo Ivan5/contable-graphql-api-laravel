@@ -102,4 +102,41 @@ class TransactionTest extends TestCase
             ]
         ]);
     }
+
+    function test_it_can_update_an_account()
+    {
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'name' => 'Wallet',
+            'user_id' => $user->id,
+            'balance' => 100
+        ]);
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            mutation{
+                updateAccount(id:'.$account->id.', input:{
+                    name:"Savings"
+                }){
+                    id
+                    name
+                    balance
+                }
+            }
+        ');
+
+        $response->assertJson([
+            'data' => [
+                'updateAccount' => [
+                    'id' => $account->id,
+                    'name' => 'Savings',
+                    'balance' => $account->balance
+                ]
+            ]
+        ]);
+        $this->assertDatabaseHas('accounts',[
+            'user_id' => $user->id,
+            'name' => 'Savings',
+            'id' => $account->id
+        ]);
+    }
 }
