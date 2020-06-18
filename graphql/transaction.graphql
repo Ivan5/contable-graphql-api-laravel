@@ -17,5 +17,5 @@ input CreateTransactionInput {
 
 enum TransactionType {
     INCOME
-    EXPRENSE
+    EXPENSE
 }
