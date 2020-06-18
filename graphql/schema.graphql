@@ -54,6 +54,7 @@ extend type Mutation {
 
     updateAccount(id: ID!, input: UpdateAccountInput! @spread): Account
         @update
+        @can(ability: "update", find: "id")
         @guard(with: ["api"])
 
     createTransaction(input: CreateTransactionInput! @spread): Transaction
