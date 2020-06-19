@@ -96,4 +96,79 @@ class TransactionQueriesTest extends TestCase
             ]
         ]);
     }
+
+    function test_it_queries_a_transaction(){
+        //prepare
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id
+        ]);
+        $transactions = factory(Transaction::class, 10)->create([
+            'account_id' => $account->id
+        ]);
+        factory(Transaction::class,30)->create();
+        $transaction = $transactions->shuffle()->first();
+        //execute
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            query {
+                transaction(id:'.$transaction->id.') {
+                    id
+                    amount
+                    account{
+                        id
+                    }
+                    type
+                }
+            }
+        ');
+        //assert
+        $response->assertJson([
+            'data' => [
+                'transaction' => [
+                    'id' => $transaction->id,
+                    'amount' => $transaction->amount,
+                    'account' => [
+                        'id' => $account->id,
+                    ],
+                    'type' => "{$transaction->type}"
+                ]
+            ]
+        ]);
+    }
+
+    function test_it_cant_query_a_transaction_where_not_owner(){
+        //prepare
+        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create([
+            'user_id' => $user->id
+        ]);
+        factory(Transaction::class, 2)->create([
+            'account_id' => $account->id
+        ]);
+        $transactions = factory(Transaction::class, 3) ->create();
+        $transaction = $transactions->shuffle()->first();
+        //execute
+        Passport::actingAs($user);
+        $response = $this->graphQL('
+            query {
+                transaction(id:'.$transaction->id.') {
+                    id
+                    amount
+                    account{
+                        id
+                    }
+                    type
+                }
+            }
+        ');
+        //assert
+        $response->assertJson([
+            'errors' => [
+                [
+                    'message' => 'You are not authorized to access transaction'
+                ]
+            ]
+        ]);
+    }
 }

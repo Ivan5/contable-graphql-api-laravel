@@ -10,7 +10,8 @@ class Transaction extends Model
     protected $fillable = ['account_id','description','amount','type'];
 
     protected $casts = [
-        'user_id' => 'Int',
+        'id' => 'Int',
+        'account_id' => 'Int',
         'amount' => 'Float'
     ];
 
