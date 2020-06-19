@@ -1,5 +1,6 @@
 #import transaction.graphql
 #import account.graphql
+#import category.graphql
 #import user.graphql
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."
@@ -31,6 +32,13 @@ type Query {
         @find
         @can(ability: "view", find: "id")
         @guard(with: ["api"])
+    categories: [Category!]
+        @paginate(scopes: ["byLoggedInUser"])
+        @guard(with: ["api"])
+    category(id: ID! @eq): Category!
+        @find
+        @can(ability: "view", find: "id")
+        @guard(with: ["api"])
 }
 
 type Mutation {
@@ -57,6 +65,21 @@ type Mutation {
         @guard(with: ["api"])
 
     deleteTransaction(id: ID!): Transaction!
+        @delete
+        @can(ability: "delete", find: "id")
+        @guard(with: ["api"])
+
+    createCategory(input: CreateCategoryInput! @spread): Category
+        @create
+        @inject(context: "user.id", name: "user_id")
+        @guard(with: ["api"])
+
+    updateCategory(id: ID!, input: UpdateCategoryInput! @spread): Category
+        @update
+        @can(ability: "update", find: "id")
+        @guard(with: ["api"])
+
+    deleteCategory(id: ID!): Category
         @delete
         @can(ability: "delete", find: "id")
         @guard(with: ["api"])
