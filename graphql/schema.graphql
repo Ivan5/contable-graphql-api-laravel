@@ -25,7 +25,12 @@ type Query {
         @find
         @can(ability: "view", find: "id")
         @guard(with: ["api"])
-    transactions: [Transaction!]
+    transactions(
+        where: _
+            @whereConditions(
+                columns: ["account_id", "category_id", "type", "created_at"]
+            )
+    ): [Transaction!]
         @paginate(scopes: ["byLoggedInUser"])
         @guard(with: ["api"])
     transaction(id: ID! @eq): Transaction!
