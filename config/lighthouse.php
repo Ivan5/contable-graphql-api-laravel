@@ -35,6 +35,9 @@ return [
             // middleware, this delegates auth and permission checks to the field level.
            \Nuwave\Lighthouse\Support\Http\Middleware\AttemptAuthentication::class,
            \Joselfonseca\LighthouseGraphQLPassport\Http\Middleware\AuthenticateWithApiGuard::class,
+           \App\Http\Middleware\EncryptCookies::class,
+           \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+           \Illuminate\Session\Middleware\StartSession::class,
         ],
 
         /*
