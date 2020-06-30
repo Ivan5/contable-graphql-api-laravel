@@ -11,6 +11,7 @@
 <script>
 import SimpleTable from "../components/tables/simple-table.vue";
 import gql from "graphql-tag";
+import ACCOUNTS from "../../graphql/accounts/accounts.graphql";
 
 export default {
     data() {
@@ -28,17 +29,11 @@ export default {
     methods: {
         async getAccounts() {
             const response = await this.$apollo.query({
-                query: gql(`
-              {
-                accounts(first:20){
-                  data{
-                    id
-                    name
-                    balance
-                  }
+                query: ACCOUNTS,
+                variables: {
+                    first: 20,
+                    page: 1
                 }
-              }
-            `)
             });
             this.accounts = response.data.accounts.data.map(item => {
                 return {

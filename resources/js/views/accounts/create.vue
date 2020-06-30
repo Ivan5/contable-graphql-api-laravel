@@ -38,6 +38,7 @@
 </template>
 <script>
 import gql from "graphql-tag";
+import CREATE_ACCOUNT from "../../graphql/accounts/create-account.graphql";
 export default {
     data() {
         return {
@@ -50,11 +51,7 @@ export default {
     methods: {
         async submit() {
             const response = await this.$apollo.mutate({
-                mutation: gql(`mutation createAccount($input:CreateAccountInput!){
-                  createAccount(input:$input){
-                      id
-                  }
-                }`),
+                mutation: CREATE_ACCOUNT,
                 variables: {
                     input: {
                         name: this.form.name,
