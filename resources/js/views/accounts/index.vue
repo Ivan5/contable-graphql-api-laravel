@@ -15,7 +15,7 @@ import gql from "graphql-tag";
 export default {
     data() {
         return {
-            headings: ["ID", "Nombre"],
+            headings: ["ID", "Nombre", "Saldo Actual"],
             accounts: []
         };
     },
@@ -34,6 +34,7 @@ export default {
                   data{
                     id
                     name
+                    balance
                   }
                 }
               }
@@ -42,7 +43,8 @@ export default {
             this.accounts = response.data.accounts.data.map(item => {
                 return {
                     id: item.id,
-                    name: item.name
+                    name: item.name,
+                    balance: item.balance
                 };
             });
         },

@@ -7453,10 +7453,105 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! graphql-tag */ "./node_modules/graphql-tag/src/index.js");
+/* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      form: {
+        name: null,
+        balance: 0.0
+      }
+    };
+  },
+  methods: {
+    submit: function submit() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this.$apollo.mutate({
+                  mutation: graphql_tag__WEBPACK_IMPORTED_MODULE_1___default()("mutation createAccount($input:CreateAccountInput!){\n                  createAccount(input:$input){\n                      id\n                  }\n                }"),
+                  variables: {
+                    input: {
+                      name: _this.form.name,
+                      balance: _this.form.balance
+                    }
+                  }
+                });
+
+              case 2:
+                response = _context.sent;
+
+                if (!response.data) {
+                  _context.next = 5;
+                  break;
+                }
+
+                return _context.abrupt("return", _this.$router.push("/accounts"));
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    }
+  }
+});
 
 /***/ }),
 
@@ -7495,7 +7590,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      headings: ["ID", "Nombre"],
+      headings: ["ID", "Nombre", "Saldo Actual"],
       accounts: []
     };
   },
@@ -7517,7 +7612,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context.next = 2;
                 return _this.$apollo.query({
-                  query: graphql_tag__WEBPACK_IMPORTED_MODULE_2___default()("\n              {\n                accounts(first:20){\n                  data{\n                    id\n                    name\n                  }\n                }\n              }\n            ")
+                  query: graphql_tag__WEBPACK_IMPORTED_MODULE_2___default()("\n              {\n                accounts(first:20){\n                  data{\n                    id\n                    name\n                    balance\n                  }\n                }\n              }\n            ")
                 });
 
               case 2:
@@ -7525,7 +7620,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.accounts = response.data.accounts.data.map(function (item) {
                   return {
                     id: item.id,
-                    name: item.name
+                    name: item.name,
+                    balance: item.balance
                   };
                 });
 
@@ -33383,7 +33479,83 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-full" })
+  return _c("div", { staticClass: "w-full" }, [
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "label",
+        {
+          staticClass: "block text-gray-700 text-sm font-bold mb-2",
+          attrs: { for: "name" }
+        },
+        [_vm._v("\n            Nombre de la cuenta\n        ")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.form.name,
+            expression: "form.name"
+          }
+        ],
+        staticClass:
+          "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+        attrs: { type: "text", id: "name", placeholder: "Gastos" },
+        domProps: { value: _vm.form.name },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.form, "name", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "label",
+        {
+          staticClass: "block text-gray-700 text-sm font-bold mb-2",
+          attrs: { for: "balance" }
+        },
+        [_vm._v("\n            Saldo de la Cuenta\n        ")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.form.balance,
+            expression: "form.balance"
+          }
+        ],
+        staticClass:
+          "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+        attrs: { type: "number", min: "0", id: "balance", placeholder: "0" },
+        domProps: { value: _vm.form.balance },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.form, "balance", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "mb-4" }, [
+      _c(
+        "button",
+        { staticClass: "button-primary", on: { click: _vm.submit } },
+        [_vm._v("Crear Cuenta")]
+      )
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
