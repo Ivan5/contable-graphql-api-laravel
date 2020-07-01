@@ -1,5 +1,9 @@
 <template>
     <div class="w-full">
+        <graphql-error-toast
+            v-if="this.errors"
+            :errors="this.errors"
+        ></graphql-error-toast>
         <div class="mb-4">
             <label
                 for="name"
@@ -39,28 +43,39 @@
 <script>
 import gql from "graphql-tag";
 import CREATE_ACCOUNT from "../../graphql/accounts/create-account.graphql";
+import GraphqlErrorToast from "../components/errors/error-toast";
+
 export default {
+    components: {
+        GraphqlErrorToast
+    },
     data() {
         return {
             form: {
                 name: null,
                 balance: 0.0
-            }
+            },
+            errors: null
         };
     },
     methods: {
         async submit() {
-            const response = await this.$apollo.mutate({
-                mutation: CREATE_ACCOUNT,
-                variables: {
-                    input: {
-                        name: this.form.name,
-                        balance: this.form.balance
+            this.errors = null;
+            try {
+                const response = await this.$apollo.mutate({
+                    mutation: CREATE_ACCOUNT,
+                    variables: {
+                        input: {
+                            name: this.form.name,
+                            balance: this.form.balance
+                        }
                     }
+                });
+                if (response.data) {
+                    return this.$router.push("/accounts");
                 }
-            });
-            if (response.data) {
-                return this.$router.push("/accounts");
+            } catch (error) {
+                this.errors = error;
             }
         }
     }
