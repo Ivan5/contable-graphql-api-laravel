@@ -36,18 +36,22 @@
             />
         </div>
         <div class="mb-4">
-            <button class="button-primary" @click="submit">Crear Cuenta</button>
+            <loading :loading="loading"></loading>
+            <button v-if="!loading" class="button-primary" @click="submit">
+                Crear Cuenta
+            </button>
         </div>
     </div>
 </template>
 <script>
-import gql from "graphql-tag";
 import CREATE_ACCOUNT from "../../graphql/accounts/create-account.graphql";
 import GraphqlErrorToast from "../components/errors/error-toast";
+import Loading from "../components/common/loading.vue";
 
 export default {
     components: {
-        GraphqlErrorToast
+        GraphqlErrorToast,
+        Loading
     },
     data() {
         return {
@@ -55,11 +59,13 @@ export default {
                 name: null,
                 balance: 0.0
             },
-            errors: null
+            errors: null,
+            loading: false
         };
     },
     methods: {
         async submit() {
+            this.loading = true;
             this.errors = null;
             try {
                 const response = await this.$apollo.mutate({
@@ -74,7 +80,9 @@ export default {
                 if (response.data) {
                     return this.$router.push("/accounts");
                 }
+                this.loading = false;
             } catch (error) {
+                this.loading = false;
                 this.errors = error;
             }
         }

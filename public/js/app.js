@@ -14271,17 +14271,19 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! graphql-tag */ "./node_modules/graphql-tag/src/index.js");
-/* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../graphql/accounts/create-account.graphql */ "./resources/js/graphql/accounts/create-account.graphql");
-/* harmony import */ var _graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_errors_error_toast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/errors/error-toast */ "./resources/js/views/components/errors/error-toast.vue");
+/* harmony import */ var _graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../graphql/accounts/create-account.graphql */ "./resources/js/graphql/accounts/create-account.graphql");
+/* harmony import */ var _graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_errors_error_toast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/errors/error-toast */ "./resources/js/views/components/errors/error-toast.vue");
+/* harmony import */ var _components_common_loading_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/common/loading.vue */ "./resources/js/views/components/common/loading.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
 //
 //
 //
@@ -14329,7 +14331,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    GraphqlErrorToast: _components_errors_error_toast__WEBPACK_IMPORTED_MODULE_3__["default"]
+    GraphqlErrorToast: _components_errors_error_toast__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Loading: _components_common_loading_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   data: function data() {
     return {
@@ -14337,7 +14340,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: null,
         balance: 0.0
       },
-      errors: null
+      errors: null,
+      loading: false
     };
   },
   methods: {
@@ -14350,11 +14354,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                _this.loading = true;
                 _this.errors = null;
-                _context.prev = 1;
-                _context.next = 4;
+                _context.prev = 2;
+                _context.next = 5;
                 return _this.$apollo.mutate({
-                  mutation: _graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_2___default.a,
+                  mutation: _graphql_accounts_create_account_graphql__WEBPACK_IMPORTED_MODULE_1___default.a,
                   variables: {
                     input: {
                       name: _this.form.name,
@@ -14363,31 +14368,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 });
 
-              case 4:
+              case 5:
                 response = _context.sent;
 
                 if (!response.data) {
-                  _context.next = 7;
+                  _context.next = 8;
                   break;
                 }
 
                 return _context.abrupt("return", _this.$router.push("/accounts"));
 
-              case 7:
-                _context.next = 12;
+              case 8:
+                _this.loading = false;
+                _context.next = 15;
                 break;
 
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](1);
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](2);
+                _this.loading = false;
                 _this.errors = _context.t0;
 
-              case 12:
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 9]]);
+        }, _callee, null, [[2, 11]]);
       }))();
     }
   }
@@ -14415,6 +14422,11 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -14482,6 +14494,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     goToCreate: function goToCreate() {
       this.$router.push("/accounts/create");
+    },
+    editRecord: function editRecord(record) {
+      this.$router.push("/accounts/".concat(record.id, "/edit"));
     }
   }
 });
@@ -14637,6 +14652,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "simple-table",
@@ -14647,6 +14667,11 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     columns: function columns() {
       return this.headings.length + 1;
+    }
+  },
+  methods: {
+    editRecord: function editRecord(record) {
+      this.$emit("editRecord", record);
     }
   }
 });
@@ -40518,13 +40543,22 @@ var render = function() {
         })
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "mb-4" }, [
-        _c(
-          "button",
-          { staticClass: "button-primary", on: { click: _vm.submit } },
-          [_vm._v("Crear Cuenta")]
-        )
-      ])
+      _c(
+        "div",
+        { staticClass: "mb-4" },
+        [
+          _c("loading", { attrs: { loading: _vm.loading } }),
+          _vm._v(" "),
+          !_vm.loading
+            ? _c(
+                "button",
+                { staticClass: "button-primary", on: { click: _vm.submit } },
+                [_vm._v("\n            Crear Cuenta\n        ")]
+              )
+            : _vm._e()
+        ],
+        1
+      )
     ],
     1
   )
@@ -40570,7 +40604,8 @@ var render = function() {
           headings: _vm.headings,
           data: _vm.accounts,
           loading: _vm.loading
-        }
+        },
+        on: { editRecord: _vm.editRecord }
       })
     ],
     1
@@ -40718,7 +40753,32 @@ var render = function() {
                       )
                     }),
                     _vm._v(" "),
-                    _vm._m(0, true)
+                    _c(
+                      "td",
+                      { staticClass: "p-4 border border-gray-400 text-center" },
+                      [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button-primary",
+                            on: {
+                              click: function($event) {
+                                return _vm.editRecord(item)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        Editar\n                    "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("button", { staticClass: "button-danger" }, [
+                          _vm._v("Eliminar")
+                        ])
+                      ]
+                    )
                   ],
                   2
                 )
@@ -40741,18 +40801,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "p-4 border border-gray-400 text-center" }, [
-      _c("button", { staticClass: "button-primary" }, [_vm._v("Editar")]),
-      _vm._v(" "),
-      _c("button", { staticClass: "button-danger" }, [_vm._v("Eliminar")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

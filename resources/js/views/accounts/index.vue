@@ -5,7 +5,12 @@
             <div class="button-primary" @click="goToCreate">Crear</div>
         </div>
 
-        <simple-table :headings="headings" :data="accounts" :loading="loading">
+        <simple-table
+            :headings="headings"
+            :data="accounts"
+            :loading="loading"
+            @editRecord="editRecord"
+        >
         </simple-table>
     </div>
 </template>
@@ -48,6 +53,9 @@ export default {
         },
         goToCreate() {
             this.$router.push("/accounts/create");
+        },
+        editRecord(record) {
+            this.$router.push(`/accounts/${record.id}/edit`);
         }
     }
 };

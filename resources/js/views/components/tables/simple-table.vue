@@ -23,7 +23,12 @@
                         {{ column }}
                     </td>
                     <td class="p-4 border border-gray-400 text-center">
-                        <button class="button-primary">Editar</button>
+                        <button
+                            @click="editRecord(item)"
+                            class="button-primary"
+                        >
+                            Editar
+                        </button>
                         <button class="button-danger">Eliminar</button>
                     </td>
                 </tr>
@@ -47,6 +52,11 @@ export default {
     computed: {
         columns() {
             return this.headings.length + 1;
+        }
+    },
+    methods: {
+        editRecord(record) {
+            this.$emit("editRecord", record);
         }
     }
 };
