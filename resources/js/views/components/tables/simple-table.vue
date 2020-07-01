@@ -14,17 +14,22 @@
                 </tr>
             </thead>
             <tbody class="border b-2 ">
-                <tr v-for="item in data" :key="item">
+                <tr v-if="!$apollo.loading" v-for="item in data" :key="item">
                     <td
                         class="p-4 border border-gray-400 text-center w-16"
-                        v-for="row in item"
-                        :key="row"
+                        v-for="column in item"
+                        :key="column"
                     >
-                        {{ row }}
+                        {{ column }}
                     </td>
                     <td class="p-4 border border-gray-400 text-center">
                         <button class="button-primary">Editar</button>
                         <button class="button-danger">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td v-if="$apollo.loading" :colspan="columns">
+                        <loading :loading="$apollo.loading"></loading>
                     </td>
                 </tr>
             </tbody>
@@ -32,8 +37,17 @@
     </div>
 </template>
 <script>
+import Loading from "../common/loading";
 export default {
     name: "simple-table",
-    props: ["headings", "data"]
+    props: ["headings", "data", "loading"],
+    components: {
+        Loading
+    },
+    computed: {
+        columns() {
+            return this.headings.length + 1;
+        }
+    }
 };
 </script>

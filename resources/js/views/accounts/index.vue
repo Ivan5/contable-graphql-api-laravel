@@ -5,19 +5,21 @@
             <div class="button-primary" @click="goToCreate">Crear</div>
         </div>
 
-        <simple-table :headings="headings" :data="accounts"> </simple-table>
+        <simple-table :headings="headings" :data="accounts" :loading="loading">
+        </simple-table>
     </div>
 </template>
 <script>
 import SimpleTable from "../components/tables/simple-table.vue";
-import gql from "graphql-tag";
+
 import ACCOUNTS from "../../graphql/accounts/accounts.graphql";
 
 export default {
     data() {
         return {
             headings: ["ID", "Nombre", "Saldo Actual"],
-            accounts: []
+            accounts: [],
+            loading: true
         };
     },
     components: {
@@ -42,6 +44,7 @@ export default {
                     balance: item.balance
                 };
             });
+            this.loading = this.$apollo.loading;
         },
         goToCreate() {
             this.$router.push("/accounts/create");
