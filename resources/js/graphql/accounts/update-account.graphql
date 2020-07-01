@@ -1,0 +1,5 @@
+query updateAccount($id: Int!, $input: UpdateAccountInput!) {
+    createAccount(id: $id, input: $input) {
+        id
+    }
+}
