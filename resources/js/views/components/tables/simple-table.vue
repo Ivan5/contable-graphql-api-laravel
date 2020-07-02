@@ -29,7 +29,12 @@
                         >
                             Editar
                         </button>
-                        <button class="button-danger">Eliminar</button>
+                        <button
+                            class="button-danger"
+                            @click="deleteRecord(item)"
+                        >
+                            Eliminar
+                        </button>
                     </td>
                 </tr>
                 <tr>
@@ -57,6 +62,9 @@ export default {
     methods: {
         editRecord(record) {
             this.$emit("editRecord", record);
+        },
+        deleteRecord(record) {
+            this.$emit("deleteRecord", record);
         }
     }
 };

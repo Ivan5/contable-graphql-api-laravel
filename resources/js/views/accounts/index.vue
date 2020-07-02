@@ -10,6 +10,7 @@
             :data="accounts"
             :loading="loading"
             @editRecord="editRecord"
+            @deleteRecord="deleteRecord"
         >
         </simple-table>
     </div>
@@ -18,6 +19,10 @@
 import SimpleTable from "../components/tables/simple-table.vue";
 
 import ACCOUNTS from "../../graphql/accounts/accounts.graphql";
+import DELETE_ACCOUNT from "../../graphql/accounts/delete-account.graphql";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+
+import "sweetalert2/src/sweetalert2.scss";
 
 export default {
     data() {
@@ -56,6 +61,31 @@ export default {
         },
         editRecord(record) {
             this.$router.push(`/accounts/${record.id}/edit`);
+        },
+        deleteRecord(record) {
+            Swal.fire({
+                tile: "Estas seguro?",
+                text: `Quieres eliminar la cuenta ${record.name}, esto no es reversible`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                calcelButtonColor: "#d33",
+                cancelButtonText: "Si, eliminar"
+            }).then(async result => {
+                if (result.value) {
+                    this.loading = true;
+                    return this.$apollo
+                        .mutate({
+                            mutation: DELETE_ACCOUNT,
+                            variables: {
+                                id: record.id
+                            }
+                        })
+                        .then(response => {
+                            this.getAccounts();
+                        });
+                }
+            });
         }
     }
 };
