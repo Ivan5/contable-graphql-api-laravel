@@ -33,12 +33,13 @@
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="balance"
                 placeholder="0"
+                disabled
             />
         </div>
         <div class="mb-4">
             <loading :loading="loading"></loading>
-            <button v-if="!loading" class="button-primary" @click="submit">
-                Crear Cuenta
+            <button v-if="!loading" class="button-primary" @click="update">
+                Editar Cuenta
             </button>
         </div>
     </div>
@@ -57,10 +58,12 @@ export default {
     data() {
         return {
             form: {
-                name: null
+                name: null,
+                balance: 0
             },
             errors: null,
-            loading: false
+            loading: false,
+            account: null
         };
     },
     mounted() {
@@ -76,9 +79,15 @@ export default {
                         id: this.$route.params.id
                     }
                 });
-            } catch (error) {}
+                this.loading = false;
+                this.account = response.data.account;
+                this.form.name = response.data.account.name;
+                this.form.balance = response.data.account.balance;
+            } catch (error) {
+                console.log(error);
+            }
         },
-        async submit() {
+        async update() {
             this.loading = true;
             this.errors = null;
             try {
@@ -91,10 +100,10 @@ export default {
                         }
                     }
                 });
+                this.loading = false;
                 if (response.data) {
                     return this.$router.push("/accounts");
                 }
-                this.loading = false;
             } catch (error) {
                 this.loading = false;
                 this.errors = error;

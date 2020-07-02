@@ -1,5 +1,5 @@
-query updateAccount($id: Int!, $input: UpdateAccountInput!) {
-    createAccount(id: $id, input: $input) {
+mutation updateAccount($id: ID!, $input: UpdateAccountInput!) {
+    updateAccount(id: $id, input: $input) {
         id
     }
 }
