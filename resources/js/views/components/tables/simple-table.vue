@@ -30,8 +30,8 @@
                             Editar
                         </button>
                         <button
-                            class="button-danger"
                             @click="deleteRecord(item)"
+                            class="button-danger"
                         >
                             Eliminar
                         </button>
