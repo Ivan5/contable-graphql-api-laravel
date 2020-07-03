@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody class="border b-2 ">
-                <tr v-if="!$apollo.loading" v-for="item in data" :key="item">
+                <tr v-if="!$apollo.loading" v-for="item in data" :key="item.id">
                     <td
                         class="p-4 border border-gray-400 text-center w-16"
                         v-for="column in item"

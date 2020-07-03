@@ -44945,7 +44945,7 @@ var render = function() {
             return !_vm.$apollo.loading
               ? _c(
                   "tr",
-                  { key: item },
+                  { key: item.id },
                   [
                     _vm._l(item, function(column) {
                       return _c(

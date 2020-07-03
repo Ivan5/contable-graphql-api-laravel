@@ -1,0 +1,12 @@
+type ExchangeConversion {
+    from: String!
+    to: String!
+    value: Float!
+    result: Float!
+}
+
+input ExchangeConversionInput {
+    from: String!
+    to: String!
+    value: Float!
+}
