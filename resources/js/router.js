@@ -1,5 +1,6 @@
 import VueRouter from "vue-router";
 import Transactions from "./views/transactions/index.vue";
+import CreateTransaction from "./views/transactions/create.vue";
 import Accounts from "./views/accounts/index.vue";
 import CreateAccount from "./views/accounts/create.vue";
 import EditAccount from "./views/accounts/edit.vue";
@@ -11,6 +12,10 @@ const routes = [
     {
         path: "/transactions",
         component: Transactions
+    },
+    {
+        path: "/transactions/create",
+        component: CreateTransaction
     },
     {
         path: "/accounts",
