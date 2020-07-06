@@ -78,6 +78,22 @@
             />
         </div>
         <div class="mb-4">
+            <label
+                for="description"
+                class="block text-gray-700 text-sm font-bold mb-2"
+            >
+                Descripción
+            </label>
+            <input
+                v-model="form.description"
+                type="text"
+                min="0"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="description"
+                placeholder="Esta es una descripcion de la transacción"
+            />
+        </div>
+        <div class="mb-4">
             <button v-if="!loading" class="button-primary" @click="submit">
                 Crear Transacción
             </button>
@@ -86,27 +102,29 @@
 </template>
 <script>
 import GET_SELECT_DATA from "../../graphql/transactions/create-transaction-data.graphql";
-import Loading from "../components/common/loading.vue";
+import CREATE_TRANSACTION from "../../graphql/transactions/create-transaction.graphql";
 import GraphqlErrorToast from "../components/errors/error-toast";
+import Loading from "../components/common/loading.vue";
 
 export default {
+    components: {
+        GraphqlErrorToast,
+        Loading
+    },
     data() {
         return {
-            loading: true,
+            loading: false,
+            errors: null,
             accounts: [],
             categories: [],
             form: {
                 account_id: null,
                 category_id: null,
                 type: "INCOME",
-                amount: 0
-            },
-            errors: null
+                amount: 0,
+                description: null
+            }
         };
-    },
-    components: {
-        Loading,
-        GraphqlErrorToast
     },
     created() {
         this.getSelectData();
@@ -130,7 +148,25 @@ export default {
             });
             this.loading = this.$apollo.loading;
         },
-        submit() {}
+        async submit() {
+            this.loading = true;
+            this.errors = null;
+            try {
+                const response = await this.$apollo.mutate({
+                    mutation: CREATE_TRANSACTION,
+                    variables: {
+                        input: this.form
+                    }
+                });
+                if (response.data) {
+                    return this.$router.push("/transactions");
+                }
+                this.loading = false;
+            } catch (error) {
+                this.loading = false;
+                this.errors = error;
+            }
+        }
     }
 };
 </script>
